@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  [workflow_dispatch]
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag woodshoesgeek/nginx-hello-world:latest
+    - name: Login and upload to Docker
+      run: |
+        docker login -u woodshoesgeek -p ${{ secrets.DOCKER_HUB_TOKEN }}
+        docker push woodshoesgeek/nginx-hello-world:latest
